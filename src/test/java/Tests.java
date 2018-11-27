@@ -1,12 +1,12 @@
+import com.aliyuncs.exceptions.ClientException;
+import com.atc.common.utils.AliyunSmsUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 public class Tests {
 
-    public static void main(String[] args){
-        String name = "杨松";
-        String code = "11231";
-        System.out.println("{\"name\":"+"\""+name+"\",\"code\":" + "\"" + code + "\"}");
-        System.out.println(RandomUtils.nextInt(100000,999999));
+    public static void main(String[] args) throws ClientException {
+        String code = String.valueOf(RandomUtils.nextInt(100000,1000000));
+        AliyunSmsUtils.sendMsg("13980152803",code);
     }
 
 }

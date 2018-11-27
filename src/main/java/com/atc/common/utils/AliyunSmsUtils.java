@@ -28,7 +28,7 @@ public class AliyunSmsUtils {
      * @throws ClientException
      * @throws ServerException
      */
-    public static SendSmsResponse sendMsg(String phoneNumber,String name, String code) throws ServerException, ClientException {
+    public static SendSmsResponse sendMsg(String phoneNumber, String code) throws ServerException, ClientException {
 
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
@@ -41,7 +41,7 @@ public class AliyunSmsUtils {
         request.setPhoneNumbers(phoneNumber);
         request.setSignName(GlobalConfigUtils.AliMsgSignName);
         request.setTemplateCode(GlobalConfigUtils.AliTemplateCode);
-        request.setTemplateParam("{\"name\":"+"\""+name+"\",\"code\":" + "\"" + code + "\"}");
+        request.setTemplateParam("{\"code\":" + "\"" + code + "\"}");
 
         //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
         //request.setSmsUpExtendCode("90997");

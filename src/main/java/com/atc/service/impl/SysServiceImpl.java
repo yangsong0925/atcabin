@@ -41,7 +41,7 @@ public class SysServiceImpl implements SysService {
         UserInfo userInfo = userRepository.findByUserId(userId);
         try {
             int updateCount = userRepository.updateCodeByUserId(userId,code);
-            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(userInfo.getPhone(), userInfo.getUserName(), code);
+            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(userInfo.getPhone(), code);
             String successCode = "OK";
             if(sendSmsResponse.getCode() == null && !successCode.equals(sendSmsResponse.getCode())) {
                 return ResultUtil.error("短信发送失败!");

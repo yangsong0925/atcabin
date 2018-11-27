@@ -19,10 +19,7 @@ public class AtcabinApplicationTests {
 
     @Test
     public void contextLoads() {
-        UserInfo userinfo = new UserInfo();
-        userinfo.setUserName("zhangsan");
-        userinfo.setPassword("lisi");
-        System.out.println(sysService.register(userinfo));
+
     }
 
 }

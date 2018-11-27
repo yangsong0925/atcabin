@@ -5,7 +5,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.atc.dao.RegisterInfoRepository;
 import com.atc.dao.UserRepository;
 import com.atc.entity.UserInfo;
-import com.atc.common.enums.UserType;
+import com.atc.common.enums.UserEnum;
 import com.atc.service.SysService;
 import com.atc.common.utils.AliyunSmsUtils;
 import com.atc.common.utils.ResultUtil;
@@ -30,7 +30,7 @@ public class SysServiceImpl implements SysService {
             return ResultUtil.error("注册表中不存在信息!");
         }
 
-        userinfo.setStatus(UserType.VALIDATE);
+        userinfo.setStatus(UserEnum.VALIDATE);
         UserInfo save = userRepository.save(userinfo);
         return ResultUtil.success(save);
     }
@@ -50,5 +50,10 @@ public class SysServiceImpl implements SysService {
             e.printStackTrace();
         }
         return ResultUtil.success();
+    }
+
+    @Override
+    public Result login(String username, String password) {
+        return null;
     }
 }

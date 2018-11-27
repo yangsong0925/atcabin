@@ -1,56 +1,45 @@
 package com.atc.common.enums;
 
-import com.atc.common.exception.BusinessException;
+import com.atc.common.exception.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.remoting.RemoteAccessException;
 
 public enum ExceptionEnum {
 
     /**
      * 无效参数
      */
-    PARAMETER_INVALID(ParameterInvalidException.class, HttpStatus.BAD_REQUEST, ResultCode.PARAM_IS_INVALID),
+    PARAMETER_INVALID(ParameterInvalidException.class, HttpStatus.BAD_REQUEST, ResultEnum.PARAM_IS_INVALID),
 
     /**
      * 数据未找到
      */
-    NOT_FOUND(DataNotFoundException.class, HttpStatus.NOT_FOUND, ResultCode.RESULE_DATA_NONE),
+    NOT_FOUND(DataNotFoundException.class, HttpStatus.NOT_FOUND, ResultEnum.RESULE_DATA_NONE),
 
     /**
      * 数据已存在
      */
-    CONFLICT(DataConflictException.class, HttpStatus.CONFLICT, ResultCode.DATA_ALREADY_EXISTED),
-
-    /**
-     * 用户未登录
-     */
-    UNAUTHORIZED(UserNotLoginException.class, HttpStatus.UNAUTHORIZED, ResultCode.USER_NOT_LOGGED_IN),
+    CONFLICT(DataConflictException.class, HttpStatus.CONFLICT, ResultEnum.DATA_ALREADY_EXISTED),
 
     /**
      * 无访问权限
      */
-    FORBIDDEN(PermissionForbiddenException.class, HttpStatus.FORBIDDEN, ResultCode.PERMISSION_NO_ACCESS),
-
-    /**
-     * 远程访问时错误
-     */
-    REMOTE_ACCESS_ERROR(RemoteAccessException.class, HttpStatus.INTERNAL_SERVER_ERROR, ResultCode.INTERFACE_OUTTER_INVOKE_ERROR),
+    FORBIDDEN(PermissionForbiddenException.class, HttpStatus.FORBIDDEN, ResultEnum.PERMISSION_NO_ACCESS),
 
     /**
      * 系统内部错误
      */
-    INTERNAL_SERVER_ERROR(InternalServerException.class, HttpStatus.INTERNAL_SERVER_ERROR, ResultCode.SYSTEM_INNER_ERROR);
+    INTERNAL_SERVER_ERROR(InternalServerException.class, HttpStatus.INTERNAL_SERVER_ERROR, ResultEnum.SYSTEM_INNER_ERROR);
 
     private Class<? extends BusinessException> eClass;
 
     private HttpStatus httpStatus;
 
-    private ResultCode resultCode;
+    private ResultEnum resultEnum;
 
-    ExceptionEnum(Class<? extends BusinessException> eClass, HttpStatus httpStatus, ResultCode resultCode) {
+    ExceptionEnum(Class<? extends BusinessException> eClass, HttpStatus httpStatus, ResultEnum resultEnum) {
         this.eClass = eClass;
         this.httpStatus = httpStatus;
-        this.resultCode = resultCode;
+        this.resultEnum = resultEnum;
     }
 
     public Class<? extends BusinessException> getEClass() {
@@ -61,8 +50,8 @@ public enum ExceptionEnum {
         return httpStatus;
     }
 
-    public ResultCode getResultCode() {
-        return resultCode;
+    public ResultEnum getResultEnum() {
+        return resultEnum;
     }
 
     public static boolean isSupportHttpStatus(int httpStatus) {

@@ -10,4 +10,5 @@ public interface SysService {
 
     Result smsCode(String userId);
 
+    Result login(String username, String password);
 }

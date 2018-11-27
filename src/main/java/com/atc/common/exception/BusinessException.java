@@ -1,7 +1,7 @@
 package com.atc.common.exception;
 
 import com.atc.common.enums.ExceptionEnum;
-import com.atc.common.enums.ResultCode;
+import com.atc.common.enums.ResultEnum;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,16 +14,16 @@ public class BusinessException extends RuntimeException {
 
     protected String message;
 
-    protected ResultCode resultCode;
+    protected ResultEnum resultEnum;
 
     protected Object data;
 
     public BusinessException() {
         ExceptionEnum exceptionEnum = ExceptionEnum.getByEClass(this.getClass());
         if (exceptionEnum != null) {
-            resultCode = exceptionEnum.getResultCode();
-            code = exceptionEnum.getResultCode().getCode().toString();
-            message = exceptionEnum.getResultCode().getMessage();
+            resultEnum = exceptionEnum.getResultEnum();
+            code = exceptionEnum.getResultEnum().getCode().toString();
+            message = exceptionEnum.getResultEnum().getMessage();
         }
 
     }
@@ -45,15 +45,15 @@ public class BusinessException extends RuntimeException {
         this.message= String.format(format, objects);
     }
 
-    public BusinessException(ResultCode resultCode, Object data) {
-        this(resultCode);
+    public BusinessException(ResultEnum resultEnum, Object data) {
+        this(resultEnum);
         this.data = data;
     }
 
-    public BusinessException(ResultCode resultCode) {
-        this.resultCode = resultCode;
-        this.code = resultCode.getCode().toString();
-        this.message = resultCode.getMessage();
+    public BusinessException(ResultEnum resultEnum) {
+        this.resultEnum = resultEnum;
+        this.code = resultEnum.getCode().toString();
+        this.message = resultEnum.getMessage();
     }
 
 }

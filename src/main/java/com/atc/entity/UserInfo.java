@@ -1,6 +1,6 @@
 package com.atc.entity;
 
-import com.atc.common.enums.UserType;
+import com.atc.common.enums.UserEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,14 +19,14 @@ public class UserInfo {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int userId;
-    private String userName;
-    private String password;
-    private String phone;
-    private String company;
+    private int      userId;
+    private String   userName;
+    private String   password;
+    private String   phone;
+    private String   company;
     @Enumerated(EnumType.ORDINAL)
-    private UserType status;
-    private String code;
+    private UserEnum status;
+    private String   smsCode;
 
 }
 

@@ -20,7 +20,6 @@ public class ProjectInfo {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int projectId;
     private String projectName;
-    private Date validTime;
     private Date beginTime;
     private Date endTime;
     private String userId;

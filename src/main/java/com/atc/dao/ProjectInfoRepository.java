@@ -1,6 +1,6 @@
 package com.atc.dao;
 
-import com.atc.entity.ProjectInfo;
+import com.atc.dao.entity.ProjectInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.atc.dao;
 
-import com.atc.entity.RegisterInfo;
+import com.atc.dao.entity.RegisterInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

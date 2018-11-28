@@ -8,7 +8,9 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AliyunSmsUtils {
 
 
@@ -49,8 +51,9 @@ public class AliyunSmsUtils {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
 //        request.setOutId("yourOutId");
 
-        //hint 此处可能会抛出异常，注意catch
+        log.info(" AliyunSmsUtils sendMsg param phoneNumber:" + phoneNumber + " code:"+code);
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        log.info(" AliyunSmsUtils sendMsg result code:" + sendSmsResponse.getCode() + " message:"+ sendSmsResponse.getMessage());
         return sendSmsResponse;
     }
 

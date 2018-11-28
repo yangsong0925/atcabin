@@ -1,4 +1,4 @@
-package com.atc.entity;
+package com.atc.dao.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

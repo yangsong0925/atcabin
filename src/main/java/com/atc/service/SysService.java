@@ -1,6 +1,6 @@
 package com.atc.service;
 
-import com.atc.entity.UserInfo;
+import com.atc.dao.entity.UserInfo;
 import com.atc.common.vo.Result;
 
 public interface SysService {
@@ -8,7 +8,7 @@ public interface SysService {
 
     Result register(UserInfo userinfo);
 
-    Result smsCode(String userId);
+    Result smsCode(UserInfo loginUser);
 
-    Result login(String username, String password);
+    Result login(String username, String password , String longitude, String latitude);
 }

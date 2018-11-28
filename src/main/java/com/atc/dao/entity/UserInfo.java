@@ -1,4 +1,4 @@
-package com.atc.entity;
+package com.atc.dao.entity;
 
 import com.atc.common.enums.UserEnum;
 import lombok.EqualsAndHashCode;

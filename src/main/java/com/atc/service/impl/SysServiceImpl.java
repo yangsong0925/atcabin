@@ -4,16 +4,20 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.atc.dao.RegisterInfoRepository;
 import com.atc.dao.UserRepository;
-import com.atc.entity.UserInfo;
+import com.atc.dao.entity.UserInfo;
 import com.atc.common.enums.UserEnum;
 import com.atc.service.SysService;
 import com.atc.common.utils.AliyunSmsUtils;
 import com.atc.common.utils.ResultUtil;
 import com.atc.common.vo.Result;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SysServiceImpl implements SysService {
@@ -36,12 +40,10 @@ public class SysServiceImpl implements SysService {
     }
 
     @Override
-    public Result smsCode(String userId) {
+    public Result smsCode(UserInfo loginUser) {
         String code = String.valueOf(RandomUtils.nextInt(100000,1000000));
-        UserInfo userInfo = userRepository.findByUserId(userId);
         try {
-            int updateCount = userRepository.updateCodeByUserId(userId,code);
-            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(userInfo.getPhone(), code);
+            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(loginUser.getPhone(), code);
             String successCode = "OK";
             if(sendSmsResponse.getCode() == null && !successCode.equals(sendSmsResponse.getCode())) {
                 return ResultUtil.error("短信发送失败!");
@@ -49,11 +51,19 @@ public class SysServiceImpl implements SysService {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        return ResultUtil.success();
+        return ResultUtil.success(code);
     }
 
     @Override
-    public Result login(String username, String password) {
+    public Result login(String username, String password, String longitude, String latitude) {
+        Map<String,Object> result = new HashMap<>();
+        String passwordMd5 = DigestUtils.md5Hex(password);
+        UserInfo userInfo = userRepository.findByUserNameAndPassword(username,passwordMd5);
+        if(!ObjectUtils.allNotNull(userInfo)){
+            return ResultUtil.error("用户或者密码错误！");
+        }
+        userInfo.setPassword("");
+        result.put("userInfo",userInfo);
         return null;
     }
 }

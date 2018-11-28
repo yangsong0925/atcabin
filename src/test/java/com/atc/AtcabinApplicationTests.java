@@ -1,6 +1,5 @@
 package com.atc;
 
-import com.atc.entity.UserInfo;
 import com.atc.service.SysService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

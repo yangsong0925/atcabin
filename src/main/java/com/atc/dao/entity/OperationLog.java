@@ -1,4 +1,4 @@
-package com.atc.entity;
+package com.atc.dao.entity;
 
 import com.atc.common.enums.CabinEnum;
 import lombok.EqualsAndHashCode;
@@ -29,5 +29,7 @@ public class OperationLog {
     private Date   closeTime;
     private String userId;
     private String projectName;
+    private String longitude;   // 经度
+    private String latitude;   // 纬度
 
 }

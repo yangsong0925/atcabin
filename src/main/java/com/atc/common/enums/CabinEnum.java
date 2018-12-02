@@ -1,5 +1,8 @@
 package com.atc.common.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum CabinEnum {
 
     OPEN(0,"开启"),CLOSE(1,"关闭"),UNCLOSE(2,"未关闭");

@@ -1,5 +1,8 @@
 package com.atc.common.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UserEnum {
 
     VALIDATE(0,"待验证"),SUCCESS(1,"注册成功");

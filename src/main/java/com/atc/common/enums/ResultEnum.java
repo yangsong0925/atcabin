@@ -1,5 +1,8 @@
 package com.atc.common.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ResultEnum {
 
     PARAM_IS_INVALID(300,"无效参数！"),

@@ -30,12 +30,22 @@ public class SysServiceImpl implements SysService {
     @Override
     public Result register(UserInfo userinfo){
         int registerCount = registerRepository.countByUserNameAndPhone(userinfo.getUserName(),userinfo.getPhone());
-        if(registerCount < 0){
+        if(registerCount <= 0){
             return ResultUtil.error("注册表中不存在信息!");
         }
-
+        int loginNameCount = userRepository.countByLoginName(userinfo.getLoginName());
+        if(loginNameCount <= 0){
+            return ResultUtil.error("登陆名称已被使用!");
+        }
+        int phoneCount = userRepository.countByphone(userinfo.getPhone());
+        if(phoneCount <= 0){
+            return ResultUtil.error("手机号已被使用!");
+        }
+        String passwordMd5 = DigestUtils.md5Hex(userinfo.getPassword());
+        userinfo.setPassword(passwordMd5);
         userinfo.setStatus(UserEnum.VALIDATE);
         UserInfo save = userRepository.save(userinfo);
+        save.setPassword("");
         return ResultUtil.success(save);
     }
 
@@ -55,10 +65,10 @@ public class SysServiceImpl implements SysService {
     }
 
     @Override
-    public Result login(String username, String password, String longitude, String latitude) {
+    public Result login(String loginName, String password, String longitude, String latitude) {
         Map<String,Object> result = new HashMap<>();
         String passwordMd5 = DigestUtils.md5Hex(password);
-        UserInfo userInfo = userRepository.findByUserNameAndPassword(username,passwordMd5);
+        UserInfo userInfo = userRepository.findByLoginNameAndPassword(loginName,passwordMd5);
         if(!ObjectUtils.allNotNull(userInfo)){
             return ResultUtil.error("用户或者密码错误！");
         }

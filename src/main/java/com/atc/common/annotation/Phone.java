@@ -14,10 +14,12 @@ import java.lang.annotation.*;
 @Documented
 public @interface Phone {
     String message() default "手机号格式不合法";
-    Class<?>[] groups() default  {
+
+    Class<?>[] groups() default {
     }
             ;
-    Class<?extends Payload>[] payload() default  {
+
+    Class<? extends Payload>[] payload() default {
     }
             ;
 }

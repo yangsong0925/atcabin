@@ -32,7 +32,10 @@ public class AtcabinApplicationTests {
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setPhone("13980152803");
         registerInfo.setProjectName("测试项目");
-        registerInfo.setUserName("杨松");
+        registerInfo.setUserName("test");
+        registerInfo.setCompany("测试项目");
+        registerInfo.setBeginTime("2017-01-01");
+        registerInfo.setEndTime("2022-01-01");
         registerInfoRepository.save(registerInfo);
         List<RegisterInfo> all = registerInfoRepository.findAll();
         System.out.println(all);

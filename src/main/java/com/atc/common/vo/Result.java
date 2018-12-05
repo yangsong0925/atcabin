@@ -15,6 +15,6 @@ public class Result<T> {
     @ApiModelProperty(value = "提示信息")
     private String msg;
     @ApiModelProperty(value = "响应数据")
-    private T data;
+    private T      data;
 
 }

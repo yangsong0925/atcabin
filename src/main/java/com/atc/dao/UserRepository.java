@@ -1,7 +1,10 @@
 package com.atc.dao;
 
+import com.atc.common.enums.UserEnum;
 import com.atc.dao.entity.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -24,4 +27,16 @@ public interface UserRepository extends JpaRepository<UserInfo, Integer> {
     int countByphone(@Param("phone") String phone);
 
     UserInfo findByLoginNameAndPassword(@Param("loginName") String loginName, @Param("password") String password);
+
+    int countByLoginNameAndStatus(@Param("loginName") String loginName, @Param("status") UserEnum userEnum);
+
+    int countByphoneAndStatus(@Param("loginName") String phone, @Param("status") UserEnum userEnum);
+
+    @Modifying
+    @Query("update UserInfo as user set user.status = :status where user.userId = :userId")
+    int updateStatusByUserId(@Param("userId")int userId,@Param("status")UserEnum userEnum);
+
+    int countByphoneAndStatusNot(@Param("loginName") String phone, @Param("status") UserEnum userEnum);
+
+    int countByLoginNameAndStatusNot(@Param("loginName") String phone, @Param("status") UserEnum userEnum);
 }

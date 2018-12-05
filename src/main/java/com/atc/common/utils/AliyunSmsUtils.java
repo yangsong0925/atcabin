@@ -15,11 +15,11 @@ public class AliyunSmsUtils {
 
 
     //产品名称:云通信短信API产品,开发者无需替换
-    static final String product = "Dysmsapi";
+    static final String product         = "Dysmsapi";
     //产品域名,开发者无需替换
-    static final String domain = "dysmsapi.aliyuncs.com";
+    static final String domain          = "dysmsapi.aliyuncs.com";
     //填写自己的appKey
-    static final String accessKeyId = GlobalConfigUtils.AliAccessKeyId;
+    static final String accessKeyId     = GlobalConfigUtils.AliAccessKeyId;
     static final String accessKeySecret = GlobalConfigUtils.AliAccessKeySecret;
 
 
@@ -51,9 +51,9 @@ public class AliyunSmsUtils {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
 //        request.setOutId("yourOutId");
 
-        log.info(" AliyunSmsUtils sendMsg param phoneNumber:" + phoneNumber + " code:"+code);
+        log.info(" AliyunSmsUtils sendMsg param phoneNumber:" + phoneNumber + " code:" + code);
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        log.info(" AliyunSmsUtils sendMsg result code:" + sendSmsResponse.getCode() + " message:"+ sendSmsResponse.getMessage());
+        log.info(" AliyunSmsUtils sendMsg result code:" + sendSmsResponse.getCode() + " message:" + sendSmsResponse.getMessage());
         return sendSmsResponse;
     }
 

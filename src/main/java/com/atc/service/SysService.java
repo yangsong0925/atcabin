@@ -1,16 +1,24 @@
 package com.atc.service;
 
-import com.atc.dao.entity.UserInfo;
 import com.atc.common.vo.Result;
+import com.atc.common.vo.UserSession;
+import com.atc.common.vo.UserVo;
+import com.atc.dao.entity.UserInfo;
 
 public interface SysService {
 
 
-    Result register(UserInfo userinfo);
+    Result register(UserVo userVo);
 
     Result smsCode(UserInfo loginUser);
 
-    Result login(String loginName, String password , String longitude, String latitude);
+    UserSession login(String loginName, String password);
 
-    Result registerOk(UserInfo userinfo);
+    int registerOk(UserInfo userinfo);
+
+    Result operate(String option, UserSession userSession);
+
+    Result map(Integer pageSize, Integer pageNo, UserSession userSession);
+
+    Result operationLog(Integer pageSize, Integer pageNo, String projectId, UserSession loginUser);
 }

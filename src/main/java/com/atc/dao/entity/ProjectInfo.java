@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -29,8 +29,12 @@ public class ProjectInfo {
     private Date   beginTime;
     @ApiModelProperty(value = "结束时间")
     private Date   endTime;
-    @ApiModelProperty(value = "结束时间", hidden = true)
-    private String userId;
-    private String code;
+    @ApiModelProperty(value = "用户id", hidden = true)
+    private Integer userId;
+    @ApiModelProperty(value = "经度")
+    private String longitude;
+    @ApiModelProperty(value = "纬度")
+    private String latitude;
+
 
 }

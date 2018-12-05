@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class PhoneValidator implements ConstraintValidator<Phone, String> {
-    private static final Pattern PATTERN = Pattern.compile( "1(([38]\\d)|(5[^4&&\\d])|(4[579])|(7[0135678]))\\d{8}");
+    private static final Pattern PATTERN = Pattern.compile("1(([38]\\d)|(5[^4&&\\d])|(4[579])|(7[0135678]))\\d{8}");
 
     @Override
     public void initialize(Phone phone) {

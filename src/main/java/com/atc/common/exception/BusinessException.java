@@ -42,7 +42,7 @@ public class BusinessException extends RuntimeException {
     public BusinessException(String msg, Throwable cause, Object... objects) {
         this();
         String format = StringUtils.replace(msg, "{}", "%s");
-        this.message= String.format(format, objects);
+        this.message = String.format(format, objects);
     }
 
     public BusinessException(ResultEnum resultEnum, Object data) {

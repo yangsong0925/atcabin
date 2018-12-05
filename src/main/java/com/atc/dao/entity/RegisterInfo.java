@@ -26,7 +26,13 @@ public class RegisterInfo {
     private String userName;
     @ApiModelProperty(value = "手机号码", required = true)
     private String phone;
-    @ApiModelProperty(value = "项目名")
+    @ApiModelProperty(value = "注册人公司名称")
+    private String company;
+    @ApiModelProperty(value = "工程项目名称")
     private String projectName;
+    @ApiModelProperty(value = "起始时间")
+    private String beginTime;
+    @ApiModelProperty(value = "结束时间")
+    private String endTime;
 
 }

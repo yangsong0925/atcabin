@@ -1,11 +1,9 @@
 package com.atc.service.impl;
 
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
-import com.aliyuncs.exceptions.ClientException;
 import com.atc.common.criteria.ExpandCriteria;
 import com.atc.common.criteria.Restrictions;
 import com.atc.common.enums.UserEnum;
-import com.atc.common.utils.AliyunSmsUtils;
+import com.atc.common.utils.CodeUtils;
 import com.atc.common.utils.Md5Helper;
 import com.atc.common.utils.ResultUtil;
 import com.atc.common.vo.Result;
@@ -31,11 +29,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SysServiceImpl implements SysService {
@@ -86,6 +82,9 @@ public class SysServiceImpl implements SysService {
             projectInfo.setBeginTime(beginTime);
             projectInfo.setEndTime(endTime);
             projectInfo.setUserId(save.getUserId());
+            projectInfo.setLatitude(userVo.getLatitude());
+            projectInfo.setLongitude(userVo.getLongitude());
+            projectInfo.setAreaNum(userVo.getAreaNum());
             projectInfoRepository.save(projectInfo);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -98,15 +97,15 @@ public class SysServiceImpl implements SysService {
     @Override
     public Result smsCode(UserInfo loginUser) {
         String code = String.valueOf(RandomUtils.nextInt(100000, 1000000));
-        try {
-            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(loginUser.getPhone(), code);
-            String successCode = "OK";
-            if (sendSmsResponse.getCode() == null && !successCode.equals(sendSmsResponse.getCode())) {
-                return ResultUtil.error("短信发送失败!");
-            }
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(loginUser.getPhone(), code);
+//            String successCode = "OK";
+//            if (sendSmsResponse.getCode() == null && !successCode.equals(sendSmsResponse.getCode())) {
+//                return ResultUtil.error("短信发送失败!");
+//            }
+//        } catch (ClientException e) {
+//            e.printStackTrace();
+//        }
         return ResultUtil.ok(code);
     }
 
@@ -130,39 +129,44 @@ public class SysServiceImpl implements SysService {
         int i = userRepository.updateStatusByUserId(userInfo.getUserId(), UserEnum.VALIDATE);
         if (i < 0) return null;
         ProjectInfo projectInfo = all.get(0);
-        userInfo.setPassword("");
         userInfo.setStatus(UserEnum.VALIDATE);
-        UserSession userSession = new UserSession();
-
         OperationLog operationLog = operationLogRepository.findByUserIdAndCloseTimeIsNull(userInfo.getUserId());
+        UserSession userSession = new UserSession();
         if (ObjectUtils.allNotNull(operationLog)){
             userSession.setOperationId(operationLog.getOperationId());
         }
         userSession.setUserInfo(userInfo);
         userSession.setProject(projectInfo.getProjectName());
+        userSession.setProjectId(projectInfo.getProjectId());
         userSession.setStartDate(DateFormatUtils.format(projectInfo.getBeginTime(), "yyyy-MM-dd"));
         userSession.setEndDate(DateFormatUtils.format(projectInfo.getEndTime(), "yyyy-MM-dd"));
         return userSession;
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int registerOk(UserInfo userinfo) {
         int updateCount = userRepository.updateStatusByUserId(userinfo.getUserId(), UserEnum.SUCCESS);
         return updateCount;
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Result operate(String option, UserSession userSession) {
         UserInfo userInfo = userSession.getUserInfo();
         option = option.toUpperCase();
         if ("CLOSE".equals(option)) {
+            userRepository.updateStatusByUserId(userInfo.getUserId(),UserEnum.OFFLINE);
             int operationId = userSession.getOperationId();
             int count = operationLogRepository.updateEndTimeById(operationId, new Date());
             if (count > 0) {
                 return ResultUtil.ok();
             }
         } else {
-            String sjm = option.substring(1, 5);
+            int projectId = userSession.getProjectId();
+            Optional<ProjectInfo> projectInfo = projectInfoRepository.findById(projectId);
+            ProjectInfo projectInfo1 = projectInfo.get();
+            String randomCode = option.substring(1, 5);
             String coordinate = option.substring(5);
             OperationLog operationLog = new OperationLog();
             operationLog.setUsername(userInfo.getUserName());
@@ -171,16 +175,18 @@ public class SysServiceImpl implements SysService {
             operationLog.setUserId(userInfo.getUserId());
             operationLog.setExpiryDate(userSession.getStartDate() + "-" + userSession.getEndDate());
             operationLog.setCoordinate(coordinate);
-            operationLog.setProjectId(userSession.getProjectId());
+            operationLog.setProjectId(projectId);
+            operationLog.setProjectName(projectInfo1.getProjectName());
             OperationLog save = operationLogRepository.save(operationLog);
             userSession.setOperationId(save.getOperationId());
-            String x = coordinate.substring(3, 8);
-            String y = coordinate.substring(8);
-            int i = Integer.parseInt(sjm);
-            int j = Integer.parseInt(x);
-            int k = Integer.parseInt(y);
-            int opcode = i * j * k;
-            return ResultUtil.ok(opcode);
+            int areaNum = Integer.valueOf(projectInfo1.getAreaNum());
+            int parm2 = Integer.valueOf(randomCode.subSequence(0,2).toString());
+            int parm3 = Integer.valueOf(randomCode.subSequence(2,4).toString());
+            int return1 = CodeUtils.CRC16_TR(0xffff, (char) areaNum);
+            int return2 = CodeUtils.CRC16_TR(return1, (char) parm2);
+            int return3 = CodeUtils.CRC16_TR(return2, (char) parm3);
+            DecimalFormat df =new DecimalFormat("0000000000000000");
+            return ResultUtil.ok(df.format(return3));
         }
         return ResultUtil.error();
     }
@@ -200,7 +206,7 @@ public class SysServiceImpl implements SysService {
     }
 
     @Override
-    public Result operationLog(Integer pageSize, Integer pageNo, String projectId, UserSession loginUser) {
+    public Result operationLog(Integer pageSize, Integer pageNo, Integer projectId, UserSession loginUser) {
         Map<String, Object> map = new HashMap<>();
         if (!ObjectUtils.allNotNull(pageSize) || pageNo == 0) {
             pageNo = 1;

@@ -30,7 +30,8 @@ public class SysController {
 
     @PostMapping("register")
     @ApiOperation(value = "用户注册", notes = "手机号、密码都是必输项 eg:{\"phone\":\"13980152803\",\"password\":\"123\",\"userName\":\"test\",\"loginName\":\"ys\"," +
-            "                           \"company\":\"测试项目\",\"project\":\"测试项目\",\"startDate\":\"2017-01-01\",\"endDate\":\"2022-01-01\"}")
+                                    "\"company\":\"测试项目\",\"project\":\"测试项目\",\"startDate\":\"2017-01-01\",\"endDate\":\"2022-01-01\"," +
+                                    "\"longitude\":\"1.0000\",\"latitude\":\"2.0000\",\"areaNum\":\"1111111\"}")
     public Result register(@RequestBody @ApiParam(name = "用户对象", value = "表单提交参数", required = true) UserVo userVo, @ApiParam(hidden = true) HttpSession session) {
         if (StringUtils.isBlank(userVo.getUserName()) || StringUtils.isBlank(userVo.getPassword()) || StringUtils.isBlank(userVo.getCompany()) || StringUtils.isBlank(userVo.getLoginName())) {
             return ResultUtil.error("必填参数不能为空!");
@@ -68,10 +69,11 @@ public class SysController {
         return ResultUtil.error(errorMsg);
     }
 
-    @GetMapping("checkSmsCode/{smsCode}")
+    @GetMapping("checkSmsCode/{code}")
     @ApiOperation(value = "短信验证码校验", notes = " 注册使用短信验证  短信验证码该变用户状态 从未验证 到 可使用权限 暂时先放着")
-    public Result checkSmsCode(@PathVariable(name = "code") @ApiParam(name = "短信验证码", required = true) String smsCode, HttpSession session) {
-        String errorMsg = "短信获取失败！";
+    @ApiImplicitParam(paramType="path", name = "code", value = "短信验证码", required = true, dataType = "String")
+    public Result checkSmsCode(@PathVariable(name = "code") String smsCode, HttpSession session) {
+        String errorMsg = "短信验证失败！";
         try {
             Object attribute = session.getAttribute(ConstantUtils.USER_LOGIN_SMS_CODE);
             if (!ObjectUtils.allNotNull(attribute)) {
@@ -110,6 +112,7 @@ public class SysController {
         if (!ObjectUtils.allNotNull(login)) {
             return ResultUtil.error("登陆失败！");
         }
+        login.getUserInfo().setPassword("");
         session.setAttribute(ConstantUtils.USER_LOGIN_TOKEN,login);
         UserInfo userInfo = login.getUserInfo();
         Map<String, Object> result = new HashMap<>();
@@ -123,7 +126,7 @@ public class SysController {
 
 
     @GetMapping("operate")
-    @ApiOperation(value = "上传数据接口")
+    @ApiOperation(value = "上传数据接口 (1234)xy=1.1111 2.2222  CLOSE")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "option", value = "上传数据信息 上传公式返回操作码 close 记录机器关闭离线", dataType = "string",
                     paramType = "query", required = true, example = "(****)xy=#.#### #.#### ****=动态密码 Xy=#.#### #.####=经纬度")
@@ -131,7 +134,7 @@ public class SysController {
     public Result operate(String option, HttpSession session) {
         UserSession loginUser = (UserSession) session.getAttribute(ConstantUtils.USER_LOGIN_TOKEN);
         Result operate = sysService.operate(option, loginUser);
-        if ("CLOSE".equals(option.toUpperCase()) && ConstantUtils.OK.equals(operate.getCode())) {
+        if ("CLOSE".equals(option.toUpperCase())) {
             session.removeAttribute(ConstantUtils.USER_LOGIN_TOKEN);
             session.invalidate();
         } else {
@@ -141,7 +144,11 @@ public class SysController {
     }
 
     @GetMapping("map")
-    @ApiOperation(value = "上传数据接口")
+    @ApiOperation(value = "获取每个舱门的基础信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "每页显示数", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "pageNo", value = "页码数", dataType = "int", paramType = "query", required = true)
+    })
     public Result map(Integer pageSize, Integer pageNo, HttpSession session) {
         UserSession loginUser = (UserSession) session.getAttribute(ConstantUtils.USER_LOGIN_TOKEN);
         Result map = sysService.map(pageSize, pageNo, loginUser);
@@ -149,8 +156,13 @@ public class SysController {
     }
 
     @GetMapping("operationLog")
-    @ApiOperation(value = "上传数据接口")
-    public Result operationLog(Integer pageSize, Integer pageNo, String projectId, HttpSession session) {
+    @ApiOperation(value = "查看日志记录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "每页显示数", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "pageNo", value = "页码数", dataType = "int", paramType = "query", required = true),
+            @ApiImplicitParam(name = "projectId", value = "项目id 根据id来获取该舱的操作记录", dataType = "int", paramType = "query", required = true)
+    })
+    public Result operationLog(Integer pageSize, Integer pageNo, Integer projectId, HttpSession session) {
         UserSession loginUser = (UserSession) session.getAttribute(ConstantUtils.USER_LOGIN_TOKEN);
         Result map = sysService.operationLog(pageSize, pageNo, projectId, loginUser);
         return map;

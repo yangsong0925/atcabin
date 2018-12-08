@@ -20,5 +20,5 @@ public interface SysService {
 
     Result map(Integer pageSize, Integer pageNo, UserSession userSession);
 
-    Result operationLog(Integer pageSize, Integer pageNo, String projectId, UserSession loginUser);
+    Result operationLog(Integer pageSize, Integer pageNo, Integer projectId, UserSession loginUser);
 }

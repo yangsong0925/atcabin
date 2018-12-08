@@ -57,5 +57,38 @@ public class AliyunSmsUtils {
         return sendSmsResponse;
     }
 
+    /**
+     * 发送短信验证码
+     *
+     * @return
+     * @throws ClientException
+     * @throws ServerException
+     */
+    public static SendSmsResponse sendMsg(String phoneNumber) throws ServerException, ClientException {
+
+        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
+        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
+
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
+        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+        IAcsClient acsClient = new DefaultAcsClient(profile);
+
+        SendSmsRequest request = new SendSmsRequest();
+        request.setPhoneNumbers(phoneNumber);
+        request.setSignName(GlobalConfigUtils.AliMsgSignName);
+        request.setTemplateCode(GlobalConfigUtils.AliTemplate);
+//        request.setTemplateParam("{\"code\":" + "\"" + code + "\"}");
+
+        //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
+        //request.setSmsUpExtendCode("90997");
+
+        //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
+//        request.setOutId("yourOutId");
+
+        log.info(" AliyunSmsUtils sendMsg param phoneNumber:" + phoneNumber);
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        log.info(" AliyunSmsUtils sendMsg result code:" + sendSmsResponse.getCode() + " message:" + sendSmsResponse.getMessage());
+        return sendSmsResponse;
+    }
 
 }

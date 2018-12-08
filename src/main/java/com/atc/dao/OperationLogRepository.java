@@ -20,7 +20,11 @@ public interface OperationLogRepository extends JpaRepository<OperationLog,Integ
     @Query("update OperationLog operationLog set operationLog.closeTime = :endTime where operationLog.operationId = :id")
     int updateEndTimeById(@Param("id") int id, @Param("endTime") Date endTime);
 
-    Page<OperationLog> findByProjectId(String projectId, Pageable pageable);
+    Page<OperationLog> findByProjectId(Integer projectId, Pageable pageable);
 
     OperationLog findByUserIdAndCloseTimeIsNull(Integer userId);
+
+    @Modifying
+    @Query("update OperationLog operationLog set operationLog.remark = :remark where operationLog.operationId = :id")
+    int updateRemarkById(@Param("id") String operationId,@Param("remark") String remark);
 }

@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Getter
@@ -47,6 +48,9 @@ public class UserInfo {
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     @Enumerated(EnumType.ORDINAL)
     private UserEnum status;
+
+    @OneToMany(mappedBy = "userId",fetch=FetchType.EAGER)
+    private List<OperationLog> operationLogs;
 
 }
 

@@ -23,4 +23,13 @@ public class UserVo extends UserInfo {
 
     @ApiModelProperty(value = "结束时间", required = true)
     private String   endDate;
+
+    @ApiModelProperty(value = "经度")
+    private String longitude;
+
+    @ApiModelProperty(value = "纬度")
+    private String latitude;
+
+    @ApiModelProperty(value = "区号")
+    private String areaNum;
 }

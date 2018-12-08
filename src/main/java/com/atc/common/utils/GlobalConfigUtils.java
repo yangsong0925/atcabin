@@ -16,6 +16,7 @@ public class GlobalConfigUtils {
     public static final String AliMsgSignName     = "云通信";
     //必填:短信模板-可在短信控制台中找到
     public static final String AliTemplateCode    = "SMS_151767217";
+    public static final String AliTemplate        = "SMS_151767217";
     public static final String AliAccessKeyId     = "LTAIerSwv2m019CG";
     public static final String AliAccessKeySecret = "7CsPmx9dGZAd3OBz1J7vGaOKkIgdGO";
 }

@@ -1,8 +1,11 @@
 package com.atc.service.impl;
 
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.atc.common.criteria.ExpandCriteria;
 import com.atc.common.criteria.Restrictions;
 import com.atc.common.enums.UserEnum;
+import com.atc.common.utils.AliyunSmsUtils;
 import com.atc.common.utils.CodeUtils;
 import com.atc.common.utils.Md5Helper;
 import com.atc.common.utils.ResultUtil;
@@ -97,15 +100,15 @@ public class SysServiceImpl implements SysService {
     @Override
     public Result smsCode(UserInfo loginUser) {
         String code = String.valueOf(RandomUtils.nextInt(100000, 1000000));
-//        try {
-//            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(loginUser.getPhone(), code);
-//            String successCode = "OK";
-//            if (sendSmsResponse.getCode() == null && !successCode.equals(sendSmsResponse.getCode())) {
-//                return ResultUtil.error("短信发送失败!");
-//            }
-//        } catch (ClientException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            SendSmsResponse sendSmsResponse = AliyunSmsUtils.sendMsg(loginUser.getPhone(), code);
+            String successCode = "OK";
+            if (sendSmsResponse.getCode() == null && !successCode.equals(sendSmsResponse.getCode())) {
+                return ResultUtil.error("短信发送失败!");
+            }
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
         return ResultUtil.ok(code);
     }
 

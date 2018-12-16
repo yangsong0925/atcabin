@@ -27,4 +27,6 @@ public interface OperationLogRepository extends JpaRepository<OperationLog,Integ
     @Modifying
     @Query("update OperationLog operationLog set operationLog.remark = :remark where operationLog.operationId = :id")
     int updateRemarkById(@Param("id") String operationId,@Param("remark") String remark);
+
+    int countByUserIdAndCloseTimeIsNull(@Param("userId") int userId);
 }

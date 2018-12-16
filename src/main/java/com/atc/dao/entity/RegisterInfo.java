@@ -1,13 +1,18 @@
 package com.atc.dao.entity;
 
+import com.atc.common.enums.RegisterEnum;
+import com.atc.common.enums.UserEnum;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -31,8 +36,22 @@ public class RegisterInfo {
     @ApiModelProperty(value = "工程项目名称")
     private String projectName;
     @ApiModelProperty(value = "起始时间")
-    private String beginTime;
+    private Date   beginTime;
     @ApiModelProperty(value = "结束时间")
-    private String endTime;
+    private Date endTime;
 
+    @ApiModelProperty(value = "启用状态", hidden = true)
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    @Enumerated(EnumType.ORDINAL)
+    private RegisterEnum status;
+
+    @ApiModelProperty(value = "启用状态", hidden = true)
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    @Enumerated(EnumType.ORDINAL)
+    private UserEnum op;
+
+    @ApiModelProperty(value = "注册时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date registerDate;
 }

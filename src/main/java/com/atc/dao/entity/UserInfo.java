@@ -26,32 +26,31 @@ public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "用户id", hidden = true)
-    private int      userId;
+    private int userId;
 
     @ApiModelProperty(value = "用户名称", required = true)
-    private String   userName;
-
-    @ApiModelProperty(value = "登陆名称", required = true)
-    private String   loginName;
+    private String userName;
 
     @ApiModelProperty(value = "用户密码", required = true)
-    private String   password;
+    private String password;
 
     @Phone
     @ApiModelProperty(value = "手机号码", required = true)
-    private String   phone;
+    private String phone;
 
     @ApiModelProperty(value = "公司名称")
-    private String   company;
+    private String company;
 
     @ApiModelProperty(value = "用户状态", hidden = true)
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     @Enumerated(EnumType.ORDINAL)
     private UserEnum status;
 
-    @OneToMany(mappedBy = "userId",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
     private List<OperationLog> operationLogs;
 
+    @ApiModelProperty(value = "注册列表id")
+    private Integer registerId;
 }
 
 

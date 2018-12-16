@@ -1,6 +1,10 @@
 package com.atc.common.utils;
 
 import com.atc.common.vo.Result;
+import org.springframework.data.domain.Page;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResultUtil {
 
@@ -34,6 +38,14 @@ public class ResultUtil {
         result.setCode(code);
         result.setMsg(msg);
         return result;
+    }
+
+    public static Result okPage(Page<?> page) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("totalCount", page.getTotalElements());
+        map.put("data", page.getContent());
+        map.put("totalPage", page.getTotalPages());
+        return ok(map);
     }
 
 }

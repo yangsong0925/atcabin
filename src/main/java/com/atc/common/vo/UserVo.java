@@ -18,6 +18,7 @@ public class UserVo extends UserInfo {
     @ApiModelProperty(value = "项目名字", required = true)
     private String   project;
 
+
     @ApiModelProperty(value = "开始时间", required = true)
     private String   startDate;
 

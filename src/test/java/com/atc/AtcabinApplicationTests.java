@@ -1,5 +1,7 @@
 package com.atc;
 
+import com.atc.common.criteria.ExpandCriteria;
+import com.atc.common.criteria.Restrictions;
 import com.atc.common.enums.UserEnum;
 import com.atc.dao.RegisterInfoRepository;
 import com.atc.dao.UserRepository;
@@ -16,9 +18,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.*;
-import javax.servlet.http.HttpSession;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -32,15 +38,16 @@ public class AtcabinApplicationTests {
     @Resource
     private UserRepository         userRepository;
 
+
     @Test
-    public void contextLoads() {
+    public void contextLoads() throws ParseException {
         RegisterInfo registerInfo = new RegisterInfo();
         registerInfo.setPhone("13980152803");
-        registerInfo.setProjectName("测试项目");
-        registerInfo.setUserName("test");
-        registerInfo.setCompany("测试项目");
-        registerInfo.setBeginTime("2017-01-01");
-        registerInfo.setEndTime("2022-01-01");
+        registerInfo.setProjectName("测试项目1");
+        registerInfo.setUserName("test1");
+        registerInfo.setCompany("测试项目1");
+        registerInfo.setBeginTime(org.apache.commons.lang3.time.DateUtils.parseDate("2017-04-01","yyyy-MM-dd"));
+        registerInfo.setEndTime(org.apache.commons.lang3.time.DateUtils.parseDate("2022-04-01","yyyy-MM-dd"));
         registerInfoRepository.save(registerInfo);
         List<RegisterInfo> all = registerInfoRepository.findAll();
         System.out.println(all);
@@ -54,6 +61,13 @@ public class AtcabinApplicationTests {
 
     @Test
     public void findUser() throws JsonProcessingException {
+        List<RegisterInfo> all = registerInfoRepository.findAll();
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writeValueAsString(all.get(0)));
+    }
+
+    @Test
+    public void findReg() throws JsonProcessingException {
         List<UserInfo> all = userRepository.findAll();
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writeValueAsString(all));
@@ -75,8 +89,16 @@ public class AtcabinApplicationTests {
     }
 
     @Test
-    public void sessionListener(HttpSession session){
-        session.invalidate();
+    public void sessionListener(){
+        Date date = new Date();
+        ExpandCriteria<RegisterInfo> criteria = new ExpandCriteria<>();
+        criteria.add(Restrictions.eq("userName", "test", false));
+        criteria.add(Restrictions.gte("beginTime", date, false));
+        criteria.add(Restrictions.lte("endTime", date, false));
+
+//        int registerCount = registerRepository.countByUserNameAndPhoneAndProjectNameAndBeginTimeAndEndTime(userVo.getUserName(), userVo.getPhone(), project, startDate, endDate);
+        List<RegisterInfo> registerInfos = registerInfoRepository.findAll(criteria);
+
     }
 
 }

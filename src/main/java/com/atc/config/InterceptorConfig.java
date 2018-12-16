@@ -10,7 +10,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RequestInterceptor())
-                .addPathPatterns("/api/operate/**","/api/operationLog/**","/api/map/**","/api/smsCode/**","/api/checkSmsCode/**")
+                .addPathPatterns("/api/operate/**","/api/operationLog/**","/api/map/**","/api/smsCode/**","/api/checkSmsCode/**",
+                    "/sys/map/**","/sys/operationLog/**","/sys/registerInfo/**","/sys/registerList/**"
+                )
                 .excludePathPatterns("/api/login/**","/api/register/**","/swagger-ui/**");
     }
 

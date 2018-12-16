@@ -43,6 +43,8 @@ public class OperationLog {
     private Date    closeTime;
     @ApiModelProperty(value = "项目名称")
     private String  projectName;
+    @ApiModelProperty(value = "注册人公司名称")
+    private String company;
     @ApiModelProperty(value = "项目有效期")
     private String  expiryDate;
     @ApiModelProperty(value = "站点经纬度")
